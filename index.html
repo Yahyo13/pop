@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifeOS — Единая система управления жизнью, учёбой и целями</title>
+  <meta name="description" content="Умная система организации жизни: умное расписание, ИИ-планировщик дня, декомпозиция задач, трекер привычек и аналитика продуктивности.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%3E<text y=%2226%22 font-size=%2226%22>⚡</text></svg>">
+</head>
+<body>
+  <div id="app" class="app-layout">
+    <!-- Сайдбар -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">Life<span class="brand-accent">OS</span></span>
+            <span class="brand-tag">v2.4 Productivity</span>
+          </div>
+        </div>
+        <button class="mobile-close-btn" id="sidebarCloseBtn" aria-label="Закрыть меню">✕</button>
+      </div>
+
+      <div class="sidebar-quick-action">
+        <button class="btn btn-primary btn-sparkle" id="quickAddBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Быстрое действие</span>
+        </button>
+      </div>
+
+      <!-- Навигация -->
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">ГЛАВНОЕ</div>
+        <button class="nav-item active" data-tab="dashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+          </svg>
+          <span>Обзор дня</span>
+          <span class="badge badge-accent" id="navTodayBadge">4</span>
+        </button>
+
+        <button class="nav-item" data-tab="schedule">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>Умное расписание</span>
+        </button>
+
+        <div class="nav-section-title">ОРГАНИЗАЦИЯ</div>
+        <button class="nav-item" data-tab="tasks">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 11l3 3L22 4"></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+          </svg>
+          <span>Задачи & Проекты</span>
+          <span class="badge" id="navTasksPending">3</span>
+        </button>
+
+        <button class="nav-item" data-tab="goals">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="6"></circle>
+            <circle cx="12" cy="12" r="2"></circle>
+          </svg>
+          <span>Цели (Goals)</span>
+        </button>
+
+        <button class="nav-item" data-tab="habits">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+          </svg>
+          <span>Привычки</span>
+          <span class="streak-badge">🔥 <span id="navStreakCount">5</span>дн</span>
+        </button>
+
+        <div class="nav-section-title">АНАЛИТИКА</div>
+        <button class="nav-item" data-tab="analytics">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Статистика жизни</span>
+        </button>
+      </nav>
+
+      <!-- Сайдбар Футер / Профиль и настройки -->
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="user-avatar">
+            <span>АМ</span>
+            <div class="user-status-dot" title="В фокусе"></div>
+          </div>
+          <div class="user-info">
+            <div class="user-name">Алексей Миронов</div>
+            <div class="user-level">Студент & Продуктивность</div>
+          </div>
+        </div>
+        <div class="footer-controls">
+          <button class="icon-btn" id="themeToggleBtn" title="Переключить тему (Светлая/Тёмная)" aria-label="Смена темы">
+            <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+          <button class="icon-btn" id="soundToggleBtn" title="Звуковые эффекты (Вкл/Выкл)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+          <button class="icon-btn" id="resetDemoBtn" title="Сбросить к исходным демо-данным">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+      <!-- Верхний бар -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle-btn" id="sidebarOpenBtn" aria-label="Открыть меню">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="current-date-box">
+            <span class="live-clock" id="liveClock">17:30</span>
+            <span class="date-divider">•</span>
+            <span class="live-date" id="liveDate">Понедельник, 27 октября</span>
+          </div>
+        </div>
+
+        <div class="topbar-center">
+          <div class="top-search-wrapper">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Поиск задач, расписания, заметок... (Ctrl + K)">
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="productivity-pill" title="Индекс продуктивности сегодня">
+            <span class="pulse-dot"></span>
+            <span class="pill-label">Фокус:</span>
+            <span class="pill-value" id="topFocusScore">88%</span>
+          </div>
+          <button class="btn btn-primary btn-sm" id="btnTopQuickAdd">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>+ Добавить</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Содержимое вкладок -->
+      <div class="content-body">
+        
+        <!-- ================= ВКЛАДКА 1: ОБЗОР ДНЯ (DASHBOARD) ================= -->
+        <section class="tab-pane active" id="tab-dashboard">
+          <!-- Hero карточка приветствия -->
+          <div class="hero-ai-card">
+            <div class="hero-ai-content">
+              <div class="hero-badge">
+                <span>⚡ Обзор продуктивности</span>
+              </div>
+              <h1 class="hero-title" id="heroGreeting">Добрый день, Алексей!</h1>
+              <p class="hero-description" id="heroAiSummary">
+                Сегодня запланировано <strong id="heroTodayTasksCount">4 дела</strong>. Главный приоритет — контрольная по математике в 11:30 и тренировка в 17:00. Вы на 5-дневной непрерывной серии привычек!
+              </p>
+              <div class="hero-quick-prompts">
+                <span class="quick-prompts-label">Быстрый переход:</span>
+                <button class="chip-btn" id="heroBtnSchedule">📅 Расписание</button>
+                <button class="chip-btn" id="heroBtnTasks">✅ Задачи</button>
+                <button class="chip-btn" id="heroBtnHabits">🔥 Привычки</button>
+                <button class="chip-btn" id="heroBtnGoals">🎯 Цели</button>
+              </div>
+            </div>
+            <div class="hero-stats-ring">
+              <div class="circular-progress" id="heroProgressRing" data-progress="68">
+                <svg class="progress-ring-svg" width="130" height="130">
+                  <circle class="progress-ring-circle-bg" stroke="currentColor" stroke-width="10" fill="transparent" r="54" cx="65" cy="65"/>
+                  <circle class="progress-ring-circle" id="heroProgressCircle" stroke="url(#gradient-accent)" stroke-width="10" stroke-linecap="round" fill="transparent" r="54" cx="65" cy="65"/>
+                  <defs>
+                    <linearGradient id="gradient-accent" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="var(--accent)"/>
+                      <stop offset="100%" stop-color="var(--accent-glow)"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="progress-ring-inner">
+                  <span class="progress-number" id="heroCompletedPercent">68%</span>
+                  <span class="progress-caption">Выполнено</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Сетка дашборда: 2 колонки (Расписание + Привычки/Задачи) -->
+          <div class="dashboard-grid">
+            <!-- Левая колонка: Расписание на сегодня с временной шкалой -->
+            <div class="card timeline-card">
+              <div class="card-header">
+                <div class="card-header-left">
+                  <div class="card-icon icon-blue">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 class="card-title">Таймлайн сегодня</h2>
+                    <p class="card-subtitle">События и занятия с распределением времени</p>
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-outline" id="btnGoToSchedule">Открыть календарь →</button>
+              </div>
+              <div class="card-body">
+                <div class="today-timeline-list" id="dashboardTimeline">
+                  <!-- Генерируется динамически через JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Правая колонка: Привычки сегодня + Главные фокус-задачи -->
+            <div class="dashboard-right-col">
+              <!-- Привычки сегодня -->
+              <div class="card habits-today-card">
+                <div class="card-header">
+                  <div class="card-header-left">
+                    <div class="card-icon icon-orange">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 class="card-title">Привычки сегодня</h2>
+                      <p class="card-subtitle">Отметьте прогресс для сохранения серии</p>
+                    </div>
+                  </div>
+                  <span class="badge badge-success" id="habitsTodayDoneCount">3 / 5 готово</span>
+                </div>
+                <div class="card-body">
+                  <div class="habits-check-list" id="dashboardHabitsList">
+                    <!-- Заполняется динамически -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Задачи в фокусе -->
+              <div class="card tasks-today-card">
+                <div class="card-header">
+                  <div class="card-header-left">
+                    <div class="card-icon icon-purple">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"></path>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 class="card-title">Задачи в фокусе</h2>
+                      <p class="card-subtitle">Что важно закрыть сегодня</p>
+                    </div>
+                  </div>
+                  <button class="btn btn-sm btn-text" id="btnQuickAddTaskModal">+ Задача</button>
+                </div>
+                <div class="card-body">
+                  <div class="tasks-mini-list" id="dashboardTasksList">
+                    <!-- Заполняется динамически -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Мини-виджет Цели дня -->
+              <div class="card mini-goal-banner">
+                <div class="mini-goal-icon">🎯</div>
+                <div class="mini-goal-info">
+                  <div class="mini-goal-title">Главная цель месяца</div>
+                  <div class="mini-goal-name">Английский до B2 (100 слов + эссе)</div>
+                  <div class="goal-progress-wrap">
+                    <div class="progress-bar-bg">
+                      <div class="progress-bar-fill" style="width: 65%;"></div>
+                    </div>
+                    <span class="goal-pct-txt">65%</span>
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-outline" id="btnGoToGoals">Цели →</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= ВКЛАДКА 2: УМНОЕ РАСПИСАНИЕ (SCHEDULE) ================= -->
+        <section class="tab-pane" id="tab-schedule">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">📅 Умное расписание</h1>
+              <p class="view-subtitle">Планируйте уроки, тренировки, отдых и работу с цветовой группировкой</p>
+            </div>
+            <div class="view-actions">
+              <div class="filter-group" id="scheduleCategoryFilters">
+                <button class="filter-btn active" data-category="all">Все</button>
+                <button class="filter-btn" data-category="study">📘 Учёба</button>
+                <button class="filter-btn" data-category="sport">🏃 Спорт</button>
+                <button class="filter-btn" data-category="work">💼 Работа</button>
+                <button class="filter-btn" data-category="rest">☕ Отдых</button>
+              </div>
+              <button class="btn btn-primary" id="btnAddNewEvent">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Добавить занятие</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Переключатель дней недели -->
+          <div class="week-days-selector" id="weekDaysSelector">
+            <!-- Кнопки дней недели генерируются динамически -->
+          </div>
+
+          <!-- Сетка расписания -->
+          <div class="schedule-board-card card">
+            <div class="schedule-summary-bar">
+              <div class="summary-metric">
+                <span class="metric-caption">Всего занятий:</span>
+                <span class="metric-val" id="schedTotalEvents">5</span>
+              </div>
+              <div class="summary-metric">
+                <span class="metric-caption">Учебных часов:</span>
+                <span class="metric-val" id="schedStudyHours">4.5 ч</span>
+              </div>
+              <div class="summary-metric">
+                <span class="metric-caption">Спорт и активность:</span>
+                <span class="metric-val" id="schedSportHours">1.5 ч</span>
+              </div>
+              <div class="summary-metric">
+                <span class="metric-caption">Баланс дня:</span>
+                <span class="metric-val badge-success-subtle" id="schedBalance">Идеальный ✨</span>
+              </div>
+            </div>
+
+            <div class="hourly-schedule-container" id="hourlyScheduleList">
+              <!-- Интерактивные слоты дня с 07:00 до 23:00 -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= ВКЛАДКА 3: ЗАДАЧИ И ДЕЛА (TASKS) ================= -->
+        <section class="tab-pane" id="tab-tasks">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">✅ Задачи & Проекты</h1>
+              <p class="view-subtitle">Гибкое управление делами, дедлайнами и приоритетами</p>
+            </div>
+            <div class="view-actions">
+              <button class="btn btn-primary" id="btnOpenNewTaskModal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Новая задача</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="tasks-filter-bar">
+            <div class="tasks-tabs-filter" id="taskStatusFilters">
+              <button class="tasks-tab-btn active" data-status="all">Все задачи (<span id="countAllTasks">0</span>)</button>
+              <button class="tasks-tab-btn" data-status="pending">В процессе (<span id="countPendingTasks">0</span>)</button>
+              <button class="tasks-tab-btn" data-status="completed">Завершённые (<span id="countCompletedTasks">0</span>)</button>
+            </div>
+            <div class="tasks-priority-filter">
+              <select id="taskPrioritySelect" class="form-select form-select-sm">
+                <option value="all">Любой приоритет</option>
+                <option value="high">Высокий 🔴</option>
+                <option value="medium">Средний 🟡</option>
+                <option value="low">Низкий 🟢</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="tasks-full-list" id="tasksContainer">
+            <!-- Список задач генерируется динамически -->
+          </div>
+        </section>
+
+        <!-- ================= ВКЛАДКА 6: ЦЕЛИ (GOALS) ================= -->
+        <section class="tab-pane" id="tab-goals">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">🎯 Стратегические цели</h1>
+              <p class="view-subtitle">Большие ориентиры на месяцы вперёд с отслеживанием прогресса и этапов</p>
+            </div>
+            <div class="view-actions">
+              <button class="btn btn-primary" id="btnOpenNewGoalModal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Новая цель</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="goals-grid" id="goalsGrid">
+            <!-- Карточки целей генерируются динамически -->
+          </div>
+        </section>
+
+        <!-- ================= ВКЛАДКА 7: ПРИВЫЧКИ (HABITS) ================= -->
+        <section class="tab-pane" id="tab-habits">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">🔥 Трекер привычек</h1>
+              <p class="view-subtitle">Маленькие ежедневные действия формируют грандиозные результаты</p>
+            </div>
+            <div class="view-actions">
+              <button class="btn btn-primary" id="btnOpenNewHabitModal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Добавить привычку</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="card habits-table-card">
+            <div class="habits-header-row">
+              <div class="col-habit-info">Привычка и категория</div>
+              <div class="col-habit-streak">Серия</div>
+              <div class="col-habit-week" id="habitWeekDaysHeader">
+                <!-- Дни текущей недели: Пн Вт Ср Чт Пт Сб Вс -->
+              </div>
+              <div class="col-habit-action">Действия</div>
+            </div>
+
+            <div class="habits-table-body" id="habitsFullTableBody">
+              <!-- Строки привычек генерируются динамически -->
+            </div>
+          </div>
+
+          <!-- Мотивационная подсказка -->
+          <div class="habits-motivation-card">
+            <div class="motivation-icon">💡</div>
+            <div class="motivation-text">
+              <h4>Правило 2-х дней</h4>
+              <p>Никогда не пропускайте привычку 2 дня подряд. Пропуск одного дня — это случайность, пропуск двух — начало новой деструктивной привычки.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= ВКЛАДКА 8: СТАТИСТИКА (ANALYTICS) ================= -->
+        <section class="tab-pane" id="tab-analytics">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">📊 Аналитика жизни и времени</h1>
+              <p class="view-subtitle">Наглядная статистика распределения времени между учёбой, спортом, работой и отдыхом</p>
+            </div>
+            <div class="view-actions">
+              <span class="badge badge-accent">Данные за эту неделю</span>
+            </div>
+          </div>
+
+          <!-- Топ-метрики аналитики -->
+          <div class="analytics-metrics-row">
+            <div class="card metric-card">
+              <div class="metric-icon-wrap icon-blue">📘</div>
+              <div class="metric-details">
+                <div class="metric-label">Время на учёбу</div>
+                <div class="metric-big-num" id="statStudyHours">28.5 ч</div>
+                <div class="metric-change positive">↑ +3.2 ч к прошлой неделе</div>
+              </div>
+            </div>
+
+            <div class="card metric-card">
+              <div class="metric-icon-wrap icon-orange">🏃</div>
+              <div class="metric-details">
+                <div class="metric-label">Спорт и активность</div>
+                <div class="metric-big-num" id="statSportHours">7.0 ч</div>
+                <div class="metric-change positive">100% от недельной цели</div>
+              </div>
+            </div>
+
+            <div class="card metric-card">
+              <div class="metric-icon-wrap icon-green">☕</div>
+              <div class="metric-details">
+                <div class="metric-label">Качественный отдых</div>
+                <div class="metric-big-num" id="statRestHours">14.0 ч</div>
+                <div class="metric-change neutral">Хороший баланс сна и отдыха</div>
+              </div>
+            </div>
+
+            <div class="card metric-card">
+              <div class="metric-icon-wrap icon-purple">🎯</div>
+              <div class="metric-details">
+                <div class="metric-label">Выполнено задач</div>
+                <div class="metric-big-num" id="statCompletedRate">86%</div>
+                <div class="metric-change positive">↑ 18 из 21 закрыто</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Диаграммы и визуализации -->
+          <div class="analytics-charts-grid">
+            <!-- График 1: Распределение времени по сферам жизни -->
+            <div class="card chart-card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Баланс жизненных сфер</h3>
+                  <p class="card-subtitle">Процентное соотношение времени</p>
+                </div>
+              </div>
+              <div class="card-body chart-body">
+                <div class="donut-chart-wrapper">
+                  <svg class="donut-chart-svg" viewBox="0 0 100 100" id="lifeBalanceDonut">
+                    <!-- Рисуется через JS SVG Path -->
+                  </svg>
+                  <div class="donut-chart-center">
+                    <span class="donut-center-val">49.5 ч</span>
+                    <span class="donut-center-lbl">В фокусе</span>
+                  </div>
+                </div>
+                <div class="chart-legend" id="chartCategoriesLegend">
+                  <!-- Легенда генерируется динамически -->
+                </div>
+              </div>
+            </div>
+
+            <!-- График 2: Активность по дням недели -->
+            <div class="card chart-card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Часы продуктивности по дням</h3>
+                  <p class="card-subtitle">Понедельник — Воскресенье</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="bar-chart-container" id="weeklyBarChart">
+                  <!-- Генерируется из JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ИИ-Инсайты по статистике -->
+          <div class="card ai-insights-card">
+            <div class="insights-header">
+              <div class="badge badge-accent">Рекомендации</div>
+              <h3>Баланс жизненных сфер и ритм работы</h3>
+            </div>
+            <div class="insights-content">
+              <div class="insight-item">
+                <span class="insight-bullet">✅</span>
+                <p><strong>Отличная концентрация на учёбе:</strong> Вы выделили 58% активного времени на образование и подготовку к занятиям. Это позволяет двигаться к вашим целям с опережением графика.</p>
+              </div>
+              <div class="insight-item">
+                <span class="insight-bullet">⚡</span>
+                <p><strong>Совет по продуктивности:</strong> В середине недели часто возникает спад внимания во второй половине дня. Рекомендуем делать 15-минутные паузы без гаджетов и экранов каждые 90 минут.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= МОДАЛЬНЫЕ ОКНА ================= -->
+
+  <!-- Модалка 1: Быстрое добавление (Quick Action Modal) -->
+  <div class="modal-overlay" id="quickAddModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Быстрое действие</h3>
+        <button class="modal-close-btn" data-close-modal="quickAddModal">✕</button>
+      </div>
+      <div class="modal-body quick-actions-body">
+        <button class="quick-card-btn" id="qaNewEventBtn">
+          <div class="quick-card-icon icon-blue">📅</div>
+          <div class="quick-card-text">
+            <strong>Занятие в расписание</strong>
+            <span>Урок, тренировка, созвон или пара</span>
+          </div>
+        </button>
+
+        <button class="quick-card-btn" id="qaNewTaskBtn">
+          <div class="quick-card-icon icon-purple">✅</div>
+          <div class="quick-card-text">
+            <strong>Новая задача</strong>
+            <span>Дело с дедлайном и приоритетом</span>
+          </div>
+        </button>
+
+        <button class="quick-card-btn" id="qaNewGoalBtn">
+          <div class="quick-card-icon icon-emerald">🎯</div>
+          <div class="quick-card-text">
+            <strong>Новая цель</strong>
+            <span>Большой ориентир с этапами выполнения</span>
+          </div>
+        </button>
+
+        <button class="quick-card-btn" id="qaNewHabitBtn">
+          <div class="quick-card-icon icon-orange">🔥</div>
+          <div class="quick-card-text">
+            <strong>Новая привычка</strong>
+            <span>Регулярное полезное действие на каждый день</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модалка 2: Добавить событие в расписание -->
+  <div class="modal-overlay" id="addEventModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="eventModalTitle">Добавить занятие в расписание</h3>
+        <button class="modal-close-btn" data-close-modal="addEventModal">✕</button>
+      </div>
+      <form id="addEventForm" class="modal-body">
+        <input type="hidden" id="eventEditId" value="">
+        <div class="form-group">
+          <label for="eventTitle">Название занятия *</label>
+          <input type="text" id="eventTitle" class="form-input" placeholder="Например: Тренировка в спортзале" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="eventCategory">Категория *</label>
+            <select id="eventCategory" class="form-select" required>
+              <option value="study">📘 Учёба</option>
+              <option value="sport">🏃 Спорт</option>
+              <option value="work">💼 Работа</option>
+              <option value="rest">☕ Отдых / Семья</option>
+              <option value="other">🌟 Личное</option>
+            </select>
+          </div>
+          <div class="form-group col">
+            <label for="eventDay">День недели *</label>
+            <select id="eventDay" class="form-select" required>
+              <option value="mon">Понедельник</option>
+              <option value="tue">Вторник</option>
+              <option value="wed">Среда</option>
+              <option value="thu">Четверг</option>
+              <option value="fri">Пятница</option>
+              <option value="sat">Суббота</option>
+              <option value="sun">Воскресенье</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="eventStartTime">Время начала *</label>
+            <input type="time" id="eventStartTime" class="form-input" value="14:00" required>
+          </div>
+          <div class="form-group col">
+            <label for="eventEndTime">Время окончания *</label>
+            <input type="time" id="eventEndTime" class="form-input" value="15:30" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="eventNotes">Заметка или место</label>
+          <input type="text" id="eventNotes" class="form-input" placeholder="Аудитория 302 / Фитнес-клуб / Онлайн">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="addEventModal">Отмена</button>
+          <button type="submit" class="btn btn-primary">Сохранить занятие</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Модалка 3: Добавить задачу -->
+  <div class="modal-overlay" id="addTaskModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="taskModalTitle">Новая задача</h3>
+        <button class="modal-close-btn" data-close-modal="addTaskModal">✕</button>
+      </div>
+      <form id="addTaskForm" class="modal-body">
+        <input type="hidden" id="taskEditId" value="">
+        <div class="form-group">
+          <label for="taskTitle">Что нужно сделать? *</label>
+          <input type="text" id="taskTitle" class="form-input" placeholder="Например: Сделать домашку по алгебре №14-22" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="taskCategory">Сфера / Проект</label>
+            <select id="taskCategory" class="form-select">
+              <option value="study">📘 Учёба</option>
+              <option value="work">💼 Проект / Работа</option>
+              <option value="sport">🏃 Спорт</option>
+              <option value="personal">🌟 Личное</option>
+            </select>
+          </div>
+          <div class="form-group col">
+            <label for="taskPriority">Приоритет</label>
+            <select id="taskPriority" class="form-select">
+              <option value="high">🔴 Высокий (Срочно)</option>
+              <option value="medium" selected>🟡 Средний</option>
+              <option value="low">🟢 Низкий</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="taskDueDate">Срок выполнения (дедлайн)</label>
+            <input type="date" id="taskDueDate" class="form-input">
+          </div>
+          <div class="form-group col">
+            <label for="taskEstMinutes">Оценка времени (мин)</label>
+            <input type="number" id="taskEstMinutes" class="form-input" placeholder="45" min="5" step="5">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="addTaskModal">Отмена</button>
+          <button type="submit" class="btn btn-primary">Сохранить задачу</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Модалка 4: Добавить цель -->
+  <div class="modal-overlay" id="addGoalModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Поставить новую цель</h3>
+        <button class="modal-close-btn" data-close-modal="addGoalModal">✕</button>
+      </div>
+      <form id="addGoalForm" class="modal-body">
+        <div class="form-group">
+          <label for="goalTitle">Название цели *</label>
+          <input type="text" id="goalTitle" class="form-input" placeholder="Например: Выучить английский до B2 за 6 месяцев" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="goalCategory">Категория</label>
+            <select id="goalCategory" class="form-select">
+              <option value="education">🎓 Образование</option>
+              <option value="career">💼 Карьера и навыки</option>
+              <option value="fitness">💪 Здоровье и спорт</option>
+              <option value="finance">💰 Финансы</option>
+            </select>
+          </div>
+          <div class="form-group col">
+            <label for="goalDeadline">Целевой срок</label>
+            <input type="date" id="goalDeadline" class="form-input">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="goalMilestones">Ключевые этапы (через запятую или с новой строки)</label>
+          <textarea id="goalMilestones" class="form-input" rows="3" placeholder="Пройти 20 уроков грамматики, Выучить 500 новых слов, Прочитать книгу на английском"></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="addGoalModal">Отмена</button>
+          <button type="submit" class="btn btn-primary">Создать цель</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Модалка 5: Добавить привычку -->
+  <div class="modal-overlay" id="addHabitModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Новая привычка</h3>
+        <button class="modal-close-btn" data-close-modal="addHabitModal">✕</button>
+      </div>
+      <form id="addHabitForm" class="modal-body">
+        <div class="form-group">
+          <label for="habitTitle">Что хотите делать регулярно? *</label>
+          <input type="text" id="habitTitle" class="form-input" placeholder="Например: 2 литра воды или 20 минут чтения" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="habitCategory">Категория</label>
+            <select id="habitCategory" class="form-select">
+              <option value="health">💧 Здоровье</option>
+              <option value="study">📚 Обучение</option>
+              <option value="sport">🏃 Спорт</option>
+              <option value="mind">🧘 Ментальное</option>
+            </select>
+          </div>
+          <div class="form-group col">
+            <label for="habitTimeOfDay">Время суток</label>
+            <select id="habitTimeOfDay" class="form-select">
+              <option value="morning">Утро ☀️</option>
+              <option value="day">День 🌤️</option>
+              <option value="evening">Вечер 🌙</option>
+              <option value="any">В течение дня 🔄</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="addHabitModal">Отмена</button>
+          <button type="submit" class="btn btn-primary">Создать привычку</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Контейнер всплывающих уведомлений (Toasts) -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Холст конфетти для празднований -->
+  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+  <!-- Скрипты -->
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
